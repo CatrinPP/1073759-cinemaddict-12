@@ -22,6 +22,11 @@ export default class Api {
       .then((films) => films.map(FilmModel.adaptToClient));
   }
 
+  getComments(filmId) {
+    return this._load({url: `comments/${filmId}`})
+      .then(Api.toJSON);
+  }
+
   updateFilm(film) {
     return this._load({
       url: `movies/${film.id}`,

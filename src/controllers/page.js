@@ -37,7 +37,7 @@ export default class PageController {
   _renderFilmCards(array, container, count, onDataChange, onViewCHange) {
     const filmControllers = [];
     for (let i = 0; i < count; i++) {
-      const filmController = new FilmController(container, onDataChange, onViewCHange);
+      const filmController = new FilmController(container, onDataChange, onViewCHange, this._api);
       filmController.render(array[i]);
       filmControllers.push(filmController);
     }
