@@ -8,21 +8,6 @@ const createElement = (template) => {
 };
 
 const getRandomBoolean = () => Math.random() > 0.5;
-
-const getRandomIntegerNumber = (min, max) => {
-  return min + Math.floor((max - min) * Math.random());
-};
-
-const getRandomDecimalNumber = (min, max) => {
-  return (min + (max - min) * Math.random()).toFixed(1);
-};
-
-const getRandomArrayItem = (array) => {
-  const randomIndex = getRandomIntegerNumber(0, array.length - 1);
-
-  return array[randomIndex];
-};
-
 const getProfileRating = (count) => {
   let result = ``;
   if (count > 1 && count <= 10) {
@@ -123,10 +108,7 @@ export {
   getFilmsByFilter,
   getFilters,
   getProfileRating,
-  getRandomArrayItem,
   getRandomBoolean,
-  getRandomDecimalNumber,
-  getRandomIntegerNumber,
   getWatchedFilmsCount,
   remove,
   render,

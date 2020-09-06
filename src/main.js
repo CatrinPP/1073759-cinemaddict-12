@@ -5,7 +5,6 @@ import SortComponent from './components/sort.js';
 import FooterStatistics from './components/footer-statistics.js';
 import FilmsComponent from './components/films.js';
 import FilmsModel from './models/films.js';
-// import {generateFilms} from './mock/film.js';
 import {RenderPosition} from './const.js';
 import {getWatchedFilmsCount, render} from './utils.js';
 import Api from "./api.js";
