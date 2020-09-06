@@ -7,7 +7,7 @@ import {FILM_CARDS_EXTRA_COUNT, RenderPosition, SHOWING_CARDS_COUNT_ON_START, SH
 import {remove, render} from '../utils.js';
 
 export default class PageController {
-  constructor(container, sortComponent, filmsModel) {
+  constructor(container, sortComponent, filmsModel, api) {
     this._container = container;
     this._sortComponent = sortComponent;
     this._filmsModel = filmsModel;
@@ -20,6 +20,7 @@ export default class PageController {
     this._filmsListElement = null;
     this._filmsListContainerElement = null;
     this._showedFilmsControllers = [];
+    this._api = api;
 
     this._renderFilmCards = this._renderFilmCards.bind(this);
     this._getSortedFilms = this._getSortedFilms.bind(this);
@@ -99,7 +100,10 @@ export default class PageController {
   }
 
   _onDataChange(filmController, oldData, newData) {
-    const isSuccess = this._filmsModel.updateFilm(oldData.id, newData);
+    const isSuccess = this._api.updateFilm(newData)
+      .then((response) => {
+        this._filmsModel.updateFilm(oldData.id, response);
+      });
 
     if (isSuccess) {
       filmController.render(newData);
