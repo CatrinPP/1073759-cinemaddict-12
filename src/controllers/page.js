@@ -7,7 +7,7 @@ import {FILM_CARDS_EXTRA_COUNT, RenderPosition, SHOWING_CARDS_COUNT_ON_START, SH
 import {remove, render} from '../utils.js';
 
 export default class PageController {
-  constructor(container, sortComponent, filmsModel) {
+  constructor(container, sortComponent, filmsModel, api) {
     this._container = container;
     this._sortComponent = sortComponent;
     this._filmsModel = filmsModel;
@@ -20,6 +20,7 @@ export default class PageController {
     this._filmsListElement = null;
     this._filmsListContainerElement = null;
     this._showedFilmsControllers = [];
+    this._api = api;
 
     this._renderFilmCards = this._renderFilmCards.bind(this);
     this._getSortedFilms = this._getSortedFilms.bind(this);
@@ -36,7 +37,7 @@ export default class PageController {
   _renderFilmCards(array, container, count, onDataChange, onViewCHange) {
     const filmControllers = [];
     for (let i = 0; i < count; i++) {
-      const filmController = new FilmController(container, onDataChange, onViewCHange);
+      const filmController = new FilmController(container, onDataChange, onViewCHange, this._api);
       filmController.render(array[i]);
       filmControllers.push(filmController);
     }
@@ -99,7 +100,10 @@ export default class PageController {
   }
 
   _onDataChange(filmController, oldData, newData) {
-    const isSuccess = this._filmsModel.updateFilm(oldData.id, newData);
+    const isSuccess = this._api.updateFilm(newData)
+      .then((response) => {
+        this._filmsModel.updateFilm(oldData.id, response);
+      });
 
     if (isSuccess) {
       filmController.render(newData);
@@ -126,11 +130,12 @@ export default class PageController {
     this.render();
   }
 
-  render() {
+  render(loadingComponent) {
     const container = this._container.getElement();
     const films = this._filmsModel.getFilms();
 
     if (!films.length) {
+      remove(loadingComponent);
       render(container, this._noFilmsComponent, RenderPosition.BEFOREEND);
       return;
     }
@@ -138,6 +143,7 @@ export default class PageController {
     const filmsSortedByRating = films.slice().sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating);
     const filmsSortedByCommentsCount = films.slice().sort((a, b) => b.comments.length - a.comments.length);
 
+    remove(loadingComponent);
     render(container, this._filmsListComponent, RenderPosition.BEFOREEND);
     render(container, this._filmsListTopRatedComponent, RenderPosition.BEFOREEND);
     render(container, this._filmsListMostCommentedComponent, RenderPosition.BEFOREEND);
