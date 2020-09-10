@@ -130,11 +130,12 @@ export default class PageController {
     this.render();
   }
 
-  render() {
+  render(loadingComponent) {
     const container = this._container.getElement();
     const films = this._filmsModel.getFilms();
 
     if (!films.length) {
+      remove(loadingComponent);
       render(container, this._noFilmsComponent, RenderPosition.BEFOREEND);
       return;
     }
@@ -142,6 +143,7 @@ export default class PageController {
     const filmsSortedByRating = films.slice().sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating);
     const filmsSortedByCommentsCount = films.slice().sort((a, b) => b.comments.length - a.comments.length);
 
+    remove(loadingComponent);
     render(container, this._filmsListComponent, RenderPosition.BEFOREEND);
     render(container, this._filmsListTopRatedComponent, RenderPosition.BEFOREEND);
     render(container, this._filmsListMostCommentedComponent, RenderPosition.BEFOREEND);
